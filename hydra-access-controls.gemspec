@@ -14,4 +14,9 @@ Gem::Specification.new do |gem|
   gem.name          = "hydra-access-controls"
   gem.require_paths = ["lib"]
   gem.version       = Hydra::Access::Controls::VERSION
+
+  gem.add_dependency 'activesupport'
+  gem.add_dependency 'active-fedora'
+  gem.add_development_dependency 'rspec'
+  
 end
