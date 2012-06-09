@@ -13,6 +13,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 # 
 require 'rspec/autorun'
 require 'hydra-access-controls'
+require 'support/mods_asset'
 RSpec.configure do |config|
 
 end

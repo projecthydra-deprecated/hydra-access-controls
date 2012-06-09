@@ -1,11 +1,4 @@
 require 'spec_helper'
-require 'active-fedora'
-
-class ModsAsset < ActiveFedora::Base
-  include Hydra::ModelMixins::RightsMetadata
-  has_metadata :name => "rightsMetadata", :type => Hydra::Datastream::RightsMetadata
-
-end
 
 describe Hydra::ModelMixins::RightsMetadata do
   subject { ModsAsset.new }

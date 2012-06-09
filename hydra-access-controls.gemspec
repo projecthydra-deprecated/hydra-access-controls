@@ -2,10 +2,10 @@
 require File.expand_path('../lib/hydra-access-controls/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["TODO: Write your name"]
+  gem.authors       = ["Justin Coyne"]
   gem.email         = ["justin.coyne@yourmediashelf.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Access controls for project hydra}
+  gem.summary       = %q{Access controls for project hydra}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($\)
@@ -17,6 +17,9 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'activesupport'
   gem.add_dependency 'active-fedora'
+  gem.add_dependency 'cancan'
+  gem.add_dependency 'deprecation'
+
   gem.add_development_dependency 'rspec'
   
 end
