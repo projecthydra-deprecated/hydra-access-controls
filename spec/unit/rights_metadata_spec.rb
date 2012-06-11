@@ -50,7 +50,6 @@ describe Hydra::ModelMixins::RightsMetadata do
   context "with rightsMetadata" do
     before do
       subject.rightsMetadata.update_permissions("person"=>{"person1"=>"read","person2"=>"discover"}, "group"=>{'group-6' => 'read', "group-7"=>'read', 'group-8'=>'edit'})
-      subject.save
     end
     it "should have read groups accessor" do
       subject.read_groups.should == ['group-6', 'group-7']
