@@ -20,6 +20,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'cancan'
   gem.add_dependency 'deprecation'
 
+  gem.add_development_dependency("rake")
   gem.add_development_dependency 'rspec'
+
   
 end
