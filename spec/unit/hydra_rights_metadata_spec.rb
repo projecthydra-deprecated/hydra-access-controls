@@ -21,6 +21,12 @@ describe Hydra::Datastream::RightsMetadata do
     its(:title) {should == ["Creative Commons Attribution 3.0 Unported License."] }
     its(:description) { should == ["This Creative Commons license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials."] }
     its(:url) {should == ["http://creativecommons.org/licenses/by/3.0/"] }
+
+    it "should be accessable as a term path" do
+      # This enables us to use:
+      #  delegate :license_title, :to=>'rightsMetadata', :at=>[:license, :title]
+      @sample.term_values(:license, :title).should == ["Creative Commons Attribution 3.0 Unported License."]
+    end
   end
   
   describe "permissions" do

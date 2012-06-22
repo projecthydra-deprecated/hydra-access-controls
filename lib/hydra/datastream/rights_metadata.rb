@@ -46,7 +46,7 @@ module Hydra
           t.embargo_release_date(:proxy => [:machine, :date])
         }    
 
-        t.license(:proxy=>[:copyright])
+        t.license(:ref=>[:copyright])
       end
 
       # Generates an empty Mods Article (used when you call ModsArticle.new without passing in existing xml)
