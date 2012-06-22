@@ -10,6 +10,18 @@ describe Hydra::Datastream::RightsMetadata do
     @sample = Hydra::Datastream::RightsMetadata.new(obj.inner_object, nil)
     @sample.stub(:content).and_return('')
   end
+
+  describe "license" do
+    before do
+      @sample.license.title = "Creative Commons Attribution 3.0 Unported License." 
+      @sample.license.description = "This Creative Commons license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials." 
+      @sample.license.url = "http://creativecommons.org/licenses/by/3.0/" 
+    end
+    subject { @sample.license}
+    its(:title) {should == ["Creative Commons Attribution 3.0 Unported License."] }
+    its(:description) { should == ["This Creative Commons license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials."] }
+    its(:url) {should == ["http://creativecommons.org/licenses/by/3.0/"] }
+  end
   
   describe "permissions" do
     describe "setter" do

@@ -7,14 +7,19 @@ module Hydra
       set_terminology do |t|
         t.root(:path=>"rightsMetadata", :xmlns=>"http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1", :schema=>"http://github.com/projecthydra/schemas/tree/v1/rightsMetadata.xsd") 
         t.copyright {
+          ## BEGIN possible delete, justin 2012-06-22
           t.machine {
-            t.uvalicense
             t.cclicense   
             t.license     
           }
           t.human_readable(:path=>"human")
           t.license(:proxy=>[:machine, :license ])            
           t.cclicense(:proxy=>[:machine, :cclicense ])                  
+          ## END possible delete
+
+          t.title(:path=>'human', :attributes=>{:type=>'title'})
+          t.description(:path=>'human', :attributes=>{:type=>'description'})
+          t.url(:path=>'machine', :attributes=>{:type=>'uri'})
         }
         t.access {
           t.human_readable(:path=>"human")
@@ -40,6 +45,8 @@ module Hydra
           }
           t.embargo_release_date(:proxy => [:machine, :date])
         }    
+
+        t.license(:proxy=>[:copyright])
       end
 
       # Generates an empty Mods Article (used when you call ModsArticle.new without passing in existing xml)
@@ -47,10 +54,10 @@ module Hydra
         builder = Nokogiri::XML::Builder.new do |xml|
           xml.rightsMetadata(:version=>"0.1", "xmlns"=>"http://hydra-collab.stanford.edu/schemas/rightsMetadata/v1") {
             xml.copyright {
-              xml.human
-              xml.machine {
-                xml.uvalicense "no"
-              }
+              xml.human(:type=>'title')
+              xml.human(:type=>'description')
+              xml.machine(:type=>'uri')
+              
             }
             xml.access(:type=>"discover") {
               xml.human
