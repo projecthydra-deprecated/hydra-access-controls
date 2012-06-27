@@ -11,6 +11,11 @@ module Hydra
   autoload :AccessControlsEvaluation
   autoload :Ability
   autoload :RoleMapperBehavior
+ 
+  module ModelMixins
+    autoload :RightsMetadata, 'hydra/model_mixins/rights_metadata'
+  end
+
 end
 require 'ability'
 require 'role_mapper'
