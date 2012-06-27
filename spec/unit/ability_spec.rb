@@ -65,6 +65,9 @@ describe Ability do
       @solr_resp.stub(:docs).and_return([{'read_access_group_t' =>['registered']}])
       subject.can?(:read, registered_object).should_not be_true
     end
+    it "should not be able to create objects" do
+      subject.can?(:create, :any).should be_false
+    end
   end
   context "for a signed in user" do
     subject { Ability.new(stub("user", :email=>'archivist1@example.com', :new_record? => false, :is_being_superuser? =>false)) }
@@ -77,6 +80,9 @@ describe Ability do
       registered_object = ModsAsset.new
       @solr_resp.stub(:docs).and_return([{'read_access_group_t' =>['registered']}])
       subject.can?(:read, registered_object).should be_true
+    end
+    it "should be able to create objects" do
+      subject.can?(:create, :any).should be_true
     end
   end
 end

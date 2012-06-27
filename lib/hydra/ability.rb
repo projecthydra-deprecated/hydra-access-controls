@@ -27,10 +27,15 @@ module Hydra::Ability
     if Deprecation.silence(Hydra::SuperuserAttributes) { user.is_being_superuser?(session) }
       can :manage, :all
     else
+      create_permissions(user, session)
       edit_permissions(user, session)
       read_permissions(user, session)
       custom_permissions(user, session)
     end
+  end
+
+  def create_permissions(user, session)
+    can :create, :all if user_groups(user, session).include? 'registered'
   end
 
   def edit_permissions(user, session)
@@ -46,7 +51,6 @@ module Hydra::Ability
       @permissions_solr_document = obj
       test_edit(obj.id, user, session)
     end       
-
   end
 
   def read_permissions(user, session)

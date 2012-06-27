@@ -127,6 +127,14 @@ module Hydra::AccessControlsEnforcement
   end
 
   ## proxies to enforce_edit_permssions.  This method is here for you to override
+  def enforce_new_permissions(opts={})
+    logger.debug("Enforcing create permissions")
+    if !can? :create, ActiveFedora::Base.new
+      raise Hydra::AccessDenied.new "You do not have sufficient privileges to create a new document."
+    end
+  end
+
+  ## proxies to enforce_edit_permssions.  This method is here for you to override
   def enforce_update_permissions(opts={})
     enforce_edit_permissions(opts)
   end
