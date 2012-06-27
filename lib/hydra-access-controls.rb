@@ -2,7 +2,10 @@ require 'active_support'
 require 'active-fedora'
 require 'deprecation'
 require "hydra-access-controls/version"
-require 'hydra/model_mixins'
+begin
+  require 'hydra/model_mixins'
+rescue LoadError
+end
 require 'hydra/datastream'
 
 module Hydra
@@ -11,7 +14,7 @@ module Hydra
   autoload :AccessControlsEvaluation
   autoload :Ability
   autoload :RoleMapperBehavior
- 
+
   module ModelMixins
     autoload :RightsMetadata, 'hydra/model_mixins/rights_metadata'
   end
