@@ -20,6 +20,7 @@ module Hydra::AccessControlsEnforcement
   def enforce_access_controls(opts={})
     controller_action = params[:action].to_s
     controller_action = "edit" if params[:action] == "destroy" 
+    controller_action = "create" if params[:action] == "new" 
     delegate_method = "enforce_#{controller_action}_permissions"
     if self.respond_to?(delegate_method.to_sym, true)
       self.send(delegate_method.to_sym)
@@ -126,8 +127,8 @@ module Hydra::AccessControlsEnforcement
     end
   end
 
-  ## proxies to enforce_edit_permssions.  This method is here for you to override
-  def enforce_new_permissions(opts={})
+  ##  This method is here for you to override
+  def enforce_create_permissions(opts={})
     logger.debug("Enforcing create permissions")
     if !can? :create, ActiveFedora::Base.new
       raise Hydra::AccessDenied.new "You do not have sufficient privileges to create a new document."
