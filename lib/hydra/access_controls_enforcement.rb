@@ -19,8 +19,6 @@ module Hydra::AccessControlsEnforcement
   #   end
   def enforce_access_controls(opts={})
     controller_action = params[:action].to_s
-    controller_action = "edit" if params[:action] == "destroy" 
-    controller_action = "create" if params[:action] == "new" 
     delegate_method = "enforce_#{controller_action}_permissions"
     if self.respond_to?(delegate_method.to_sym, true)
       self.send(delegate_method.to_sym)
@@ -143,6 +141,11 @@ module Hydra::AccessControlsEnforcement
   ## proxies to enforce_edit_permssions.  This method is here for you to override
   def enforce_delete_permissions(opts={})
     enforce_edit_permissions(opts)
+  end
+
+  ## proxies to enforce_edit_permssions.  This method is here for you to override
+  def enforce_new_permissions(opts={})
+    enforce_create_permissions(opts)
   end
 
   # Controller "before" filter for enforcing access controls on index actions
