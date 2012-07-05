@@ -1,5 +1,5 @@
 class User
-  attr_accessor :uid, :email, :password, :affiliations, :new_record
+  attr_accessor :uid, :email, :password, :roles, :new_record
   
   def user_key
     uid
