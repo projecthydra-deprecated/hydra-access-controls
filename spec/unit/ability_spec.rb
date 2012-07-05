@@ -5,14 +5,6 @@ describe Ability do
     class Rails; end
     class User; end
     class Devise; end
-    class SolrDocument
-      def initialize(one, two)
-        @one = one
-      end
-      def fetch(field, default)
-        @one[field]
-      end
-    end
     class Hydra::SuperuserAttributes; end
     module Blacklight
       module Exceptions

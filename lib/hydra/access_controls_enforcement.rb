@@ -100,7 +100,6 @@ module Hydra::AccessControlsEnforcement
       if @permissions_solr_document["embargo_release_date_dt"] 
         embargo_date = Date.parse(@permissions_solr_document["embargo_release_date_dt"].split(/T/)[0])
         if embargo_date > Date.parse(Time.now.to_s)
-          ### Assuming we're using devise and have only one authentication key
           unless current_user && can?(:edit, params[:id])
             raise Hydra::AccessDenied.new("This item is under embargo.  You do not have sufficient access privileges to read this document.", :edit, params[:id])
           end
@@ -197,34 +196,46 @@ module Hydra::AccessControlsEnforcement
     
     # Grant access based on user id & role
     unless current_user.nil?
-      # for roles
-      ::RoleMapper.roles(user_key).each_with_index do |role, i|
-        permission_types.each do |type|
-          user_access_filters << "#{type}_access_group_t:#{role}"
-        end
-      end
-      # for individual person access
-      permission_types.each do |type|
-        user_access_filters << "#{type}_access_person_t:#{user_key}"        
-      end
-      if current_user.respond_to?(:is_being_superuser?) && current_user.is_being_superuser?(session) ##Deprecated
-        permission_types.each do |type|
-          user_access_filters << "#{type}_access_person_t:[* TO *]"        
-        end
-      end
-      
-      # Enforcing Embargo at Query time has been disabled.  
-      # If you want to do this, set up your own solr_search_params before_filter that injects the appropriate :fq constraints for a field that expresses your objects' embargo status.
-      #
-      # include docs in results if the embargo date is NOT in the future OR if the current user is depositor
-      # embargo_query = "(NOT embargo_release_date_dt:[NOW TO *]) OR depositor_t:#{user_key}"
-      # embargo_query = "(NOT embargo_release_date_dt:[NOW TO *]) OR (embargo_release_date_dt:[NOW TO *] AND  depositor_t:#{user_key}) AND NOT (NOT depositor_t:#{user_key} AND embargo_release_date_dt:[NOW TO *])"
-      # solr_parameters[:fq] << embargo_query         
+      user_access_filters += apply_role_permissions(permission_types)
+      user_access_filters += apply_individual_permissions(permission_types)
+      user_access_filters += apply_superuser_permissions(permission_types)
     end
     solr_parameters[:fq] << user_access_filters.join(" OR ")
     logger.debug("Solr parameters: #{ solr_parameters.inspect }")
   end
   
+  def apply_role_permissions(permission_types)
+      # for roles
+      user_access_filters = []
+      ::RoleMapper.roles(user_key).each_with_index do |role, i|
+        permission_types.each do |type|
+          user_access_filters << "#{type}_access_group_t:#{role}"
+        end
+      end
+      user_access_filters
+  end
+
+  def apply_individual_permissions(permission_types)
+      # for individual person access
+      user_access_filters = []
+      permission_types.each do |type|
+        user_access_filters << "#{type}_access_person_t:#{user_key}"        
+      end
+      user_access_filters
+  end
+
+
+  # Even though is_being_superuser? is deprecated, keep this method around (just return empty set) 
+  # so developers can easily override this behavior in their local app
+  def apply_superuser_permissions(permission_types)
+    user_access_filters = []
+    if current_user.respond_to?(:is_being_superuser?) && current_user.is_being_superuser?(session) ##Deprecated
+      permission_types.each do |type|
+        user_access_filters << "#{type}_access_person_t:[* TO *]"        
+      end
+    end
+    user_access_filters
+  end
   
   # proxy for {enforce_index_permissions}
   def enforce_search_permissions

@@ -14,6 +14,8 @@ end
 require 'rspec/autorun'
 require 'hydra-access-controls'
 require 'support/mods_asset'
+require 'support/user'
+require 'support/solr_document'
 RSpec.configure do |config|
 
 end
