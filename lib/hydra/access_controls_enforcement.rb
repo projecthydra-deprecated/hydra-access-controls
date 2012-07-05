@@ -207,7 +207,7 @@ module Hydra::AccessControlsEnforcement
       permission_types.each do |type|
         user_access_filters << "#{type}_access_person_t:#{user_key}"        
       end
-      if Deprecation.silence(Hydra::SuperuserAttributes) { current_user.is_being_superuser?(session) }
+      if user.respond_to?(:is_being_superuser?) && current_user.is_being_superuser?(session) ##Deprecated
         permission_types.each do |type|
           user_access_filters << "#{type}_access_person_t:[* TO *]"        
         end

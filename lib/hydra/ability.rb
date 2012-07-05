@@ -24,7 +24,7 @@ module Hydra::Ability
 
   def hydra_default_permissions(user, session)
     logger.debug("Usergroups are " + user_groups(user, session).inspect)
-    if Deprecation.silence(Hydra::SuperuserAttributes) { user.is_being_superuser?(session) }
+    if user.respond_to?(:is_being_superuser?) && user.is_being_superuser?(session) ### Deprecated
       can :manage, :all
     else
       create_permissions(user, session)

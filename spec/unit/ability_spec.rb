@@ -26,8 +26,6 @@ describe Ability do
     # User.any_instance.stub(:email).and_return('archivist1@example.com')
     # User.any_instance.stub(:new_record?).and_return(false)
     # User.any_instance.stub(:is_being_superuser?).and_return(false)
-    Hydra::SuperuserAttributes.stub(:silenced)
-    Hydra::SuperuserAttributes.stub(:silenced=)
     @solr_resp = stub("solr response")
     Blacklight.stub(:solr).and_return(stub("solr", :find=>@solr_resp))
     
