@@ -1,3 +1,10 @@
+RAILS_ENV="test"
+module Hydra
+  # Stubbing Hydra.config[:policy_aware] so Hydra::PolicyAwareAbility will be loaded for tests.
+  def self.config
+    {:permissions=>{:policy_aware => true}}
+  end
+end
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
@@ -14,9 +21,13 @@ end
 require 'rspec/autorun'
 require 'hydra-access-controls'
 require 'support/mods_asset'
-require 'support/user'
 require 'support/solr_document'
+require "support/user"
+require "factory_girl"
+require "factories"
+
 RSpec.configure do |config|
 
 end
+
 

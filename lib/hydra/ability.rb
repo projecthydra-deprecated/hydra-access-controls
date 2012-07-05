@@ -1,5 +1,6 @@
+require "blacklight"
 # this code will move to lib/hydra/access_controls/ability.rb (with the appropriate namespace changes) in Hydra 5.0
-# Code for CanCan access to Hydra models
+# Code for [CANCAN] access to Hydra models
 module Hydra::Ability
   include Hydra::AccessControlsEnforcement
 
@@ -39,11 +40,11 @@ module Hydra::Ability
   end
 
   def edit_permissions(user, session)
-    can :edit, String do |pid|
+    can [:edit, :update, :destroy], String do |pid|
       test_edit(pid, user, session)
     end 
 
-    can :edit, ActiveFedora::Base do |obj|
+    can [:edit, :update, :destroy], ActiveFedora::Base do |obj|
       test_edit(obj.pid, user, session)
     end
  
@@ -84,26 +85,26 @@ module Hydra::Ability
 
   def test_edit(pid, user, session)
     permissions_doc(pid)
-    logger.debug("CANCAN Checking edit permissions for user: #{user}")
+    logger.debug("[CANCAN] Checking edit permissions for user: #{user_key(user)} with groups: #{user_groups(user, session).inspect}")
     group_intersection = user_groups(user, session) & edit_groups
     result = !group_intersection.empty? || edit_persons.include?(user_key(user))
-    logger.debug("CANCAN decision: #{result}")
+    logger.debug("[CANCAN] decision: #{result}")
     result
   end   
   
   def test_read(pid, user, session)
     permissions_doc(pid)
-    logger.debug("CANCAN Checking edit permissions for user: #{user}")
+    logger.debug("[CANCAN] Checking edit permissions for user: #{user_key(user)} with groups: #{user_groups(user, session).inspect}")
     group_intersection = user_groups(user, session) & read_groups
     result = !group_intersection.empty? || read_persons.include?(user_key(user))
-    logger.debug("CANCAN decision: #{result}")
+    logger.debug("[CANCAN] decision: #{result}")
     result
   end 
   
   def edit_groups
     edit_group_field = Hydra.config[:permissions][:edit][:group]
     eg = ((@permissions_solr_document == nil || @permissions_solr_document.fetch(edit_group_field,nil) == nil) ? [] : @permissions_solr_document.fetch(edit_group_field,nil))
-    logger.debug("edit_groups: #{eg.inspect}")
+    logger.debug("[CANCAN] edit_groups: #{eg.inspect}")
     return eg
   end
 
@@ -111,14 +112,14 @@ module Hydra::Ability
   def read_groups
     read_group_field = Hydra.config[:permissions][:read][:group]
     rg = edit_groups | ((@permissions_solr_document == nil || @permissions_solr_document.fetch(read_group_field,nil) == nil) ? [] : @permissions_solr_document.fetch(read_group_field,nil))
-    logger.debug("read_groups: #{rg.inspect}")
+    logger.debug("[CANCAN] read_groups: #{rg.inspect}")
     return rg
   end
 
   def edit_persons
     edit_person_field = Hydra.config[:permissions][:edit][:individual]
     ep = ((@permissions_solr_document == nil || @permissions_solr_document.fetch(edit_person_field,nil) == nil) ? [] : @permissions_solr_document.fetch(edit_person_field,nil))
-    logger.debug("edit_persons: #{ep.inspect}")
+    logger.debug("[CANCAN] edit_persons: #{ep.inspect}")
     return ep
   end
 
@@ -126,7 +127,7 @@ module Hydra::Ability
   def read_persons
     read_individual_field = Hydra.config[:permissions][:read][:individual]
     rp = edit_persons | ((@permissions_solr_document == nil || @permissions_solr_document.fetch(read_individual_field,nil) == nil) ? [] : @permissions_solr_document.fetch(read_individual_field,nil))
-    logger.debug("read_persons: #{rp.inspect}")
+    logger.debug("[CANCAN] read_persons: #{rp.inspect}")
     return rp
   end
 

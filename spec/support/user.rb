@@ -1,5 +1,6 @@
 class User
-  attr_accessor :uid, :email, :password, :affiliations, :new_record
+
+  attr_accessor :uid, :email, :password, :roles, :new_record
 
   def initialize(params={})
     self.email = params[:email] if params[:email]

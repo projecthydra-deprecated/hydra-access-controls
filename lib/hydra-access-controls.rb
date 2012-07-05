@@ -14,6 +14,8 @@ module Hydra
   autoload :AccessControlsEnforcement
   autoload :AccessControlsEvaluation
   autoload :Ability
+  autoload :PolicyAwareAbility
+  autoload :AdminPolicy
   autoload :RoleMapperBehavior
 
   module ModelMixins
