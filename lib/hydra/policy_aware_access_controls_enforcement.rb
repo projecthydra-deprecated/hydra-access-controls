@@ -30,7 +30,7 @@ module Hydra::PolicyAwareAccessControlsEnforcement
       user_access_filters += apply_policy_role_permissions(discovery_permissions)
       user_access_filters += apply_policy_individual_permissions(discovery_permissions)
     end
-    result = Hydra::AdminPolicy.find_with_conditions( user_access_filters.join(" OR "), :fl => "id" )
+    result = policy_class.find_with_conditions( user_access_filters.join(" OR "), :fl => "id" )
     logger.debug "get policies: #{result}\n\n"
     result.map {|h| h['id']}
   end
@@ -54,6 +54,17 @@ module Hydra::PolicyAwareAccessControlsEnforcement
         user_access_filters << "inheritable_#{type}_access_person_t:#{user_key}"        
       end
       user_access_filters
+  end
+  
+  # Returns the Model used for AdminPolicy objects.
+  # You can set this by overriding this method or setting Hydra.config[:permissions][:policy_class]
+  # Defults to Hydra::AdminPolicy
+  def policy_class
+    if Hydra.config[:permissions][:policy_class].nil?
+      return Hydra::AdminPolicy
+    else
+      return Hydra.config[:permissions][:policy_class]
+    end
   end
   
 end

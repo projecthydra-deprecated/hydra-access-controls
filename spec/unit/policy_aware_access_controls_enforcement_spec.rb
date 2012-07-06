@@ -19,7 +19,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
       def session
       end
     end
-
+    
     @sample_policies = []
     # user discover
     policy1 = Hydra::AdminPolicy.new(:pid=>"test:policy1")
@@ -87,6 +87,11 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
     end
     it "should return the policies that provide discover permissions" do
         subject.policies_with_access.should_not include("test:policy7")
+    end
+    it "should allow you to configure which model to use for policies" do
+      Hydra.stub(:config).and_return( {:permissions=>{:policy_class => ModsAsset}} )
+      ModsAsset.should_receive(:find_with_conditions).and_return([])
+      subject.policies_with_access
     end
   end
   
