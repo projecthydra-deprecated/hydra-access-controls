@@ -95,5 +95,10 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
       subject.apply_gated_discovery(@solr_parameters, @user_parameters)
       @solr_parameters[:fq].first.should include(" OR (is_governed_by_s:info\\:fedora/test\\:policy1 OR is_governed_by_s:info\\:fedora/test\\:policy2 OR is_governed_by_s:info\\:fedora/test\\:policy3 OR is_governed_by_s:info\\:fedora/test\\:policy4 OR is_governed_by_s:info\\:fedora/test\\:policy5 OR is_governed_by_s:info\\:fedora/test\\:policy6)")
     end
+    it "should not change anything if there are no clauses to add" do
+      subject.stub(:policy_clauses).and_return(nil)
+      subject.apply_gated_discovery(@solr_parameters, @user_parameters)
+      @solr_parameters[:fq].first.should_not include(" OR (is_governed_by_s:info\\:fedora/test\\:policy1 OR is_governed_by_s:info\\:fedora/test\\:policy2 OR is_governed_by_s:info\\:fedora/test\\:policy3 OR is_governed_by_s:info\\:fedora/test\\:policy4 OR is_governed_by_s:info\\:fedora/test\\:policy5 OR is_governed_by_s:info\\:fedora/test\\:policy6)")
+    end
   end
 end
