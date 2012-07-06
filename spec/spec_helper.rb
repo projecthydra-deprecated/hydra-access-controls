@@ -1,4 +1,4 @@
-RAILS_ENV="test"
+ENV["environment"] ||= "test"
 module Hydra
   # Stubbing Hydra.config[:policy_aware] so Hydra::PolicyAwareAbility will be loaded for tests.
   def self.config
