@@ -22,6 +22,57 @@ describe Hydra::AccessControlsEnforcement do
   end
   subject { MockController.new }
   
+  describe "When I am searching for content" do
+    before do
+      @solr_parameters = {}
+      @user_parameters = {}
+    end
+    context "Given I am not logged in" do
+      before do
+        subject.stub(:current_user).and_return(User.new)
+        subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
+      end
+      it "Then I should be treated as a member of the 'public' group" do
+        ["discover","edit","read"].each do |type|
+          @solr_parameters[:fq].first.should match(/#{type}_access_group_t\:public/)      
+        end
+      end
+      it "Then I should not be treated as a member of the 'registered' group" do
+        @solr_parameters[:fq].first.should_not match(/registered/) 
+      end
+      it "Then I should not have individual or group permissions"
+    end
+    context "Given I am a registered user" do
+      before do
+        @user = FactoryGirl.build(:martia_morocco)
+        @user.new_record = false
+        User.stub(:find_by_user_key).and_return(@user)
+        # This is a pretty fragile way to stub it...
+        RoleMapper.stub(:byname).and_return(@user.user_key=>["faculty", "africana-faculty"])
+        subject.stub(:current_user).and_return(@user)
+        subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
+      end
+      it "Then I should be treated as a member of the 'public' and 'registered' groups" do
+        ["discover","edit","read"].each do |type|
+          @solr_parameters[:fq].first.should match(/#{type}_access_group_t\:public/)  
+          @solr_parameters[:fq].first.should match(/#{type}_access_group_t\:registered/)      
+        end
+      end
+      it "Then I should see assets that I have discover, read, or edit access to" do
+        ["discover","edit","read"].each do |type|
+          @solr_parameters[:fq].first.should match(/#{type}_access_person_t\:#{@user.user_key}/)      
+        end
+      end
+      it "Then I should see assets that my groups have discover, read, or edit access to" do
+        ["faculty", "africana-faculty"].each do |group_id|
+          ["discover","edit","read"].each do |type|
+            @solr_parameters[:fq].first.should match(/#{type}_access_group_t\:#{group_id}/)      
+          end
+        end
+      end
+    end
+  end
+  
   describe "enforce_access_controls" do
     describe "when the method exists" do
       it "should call the method" do
