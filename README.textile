@@ -29,12 +29,16 @@ Object-level permissions and Policy-level permissions are combined to produce th
 * Currently, an asset can have only one Policy associated with it -- you can't associate objects with multiple policies
 * 
 
-To turn on Policy-based enforcement, set Hydra.config[:permissions][:policy_aware] to true.
+To turn on Policy-based enforcement, include the Hydra::PolicyAwareAbility module in your Ability class.  Make sure to include it _after_ Hydra::Ability because it overrides some of the methods provided by that module.
 
+# app/models/ability.rb
 <pre>
-  Hydra.configure(:shared) do |config|
-    # ... other stuff ...
-    config[:permissions][:policy_aware] = true
+  # Allows you to use CanCan to control access to Models
+  require 'cancan'
+  class Ability
+    include CanCan::Ability
+    include Hydra::Ability
+    include Hydra::PolicyAwareAbility
   end
 </pre>
 

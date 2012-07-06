@@ -15,7 +15,6 @@ describe Hydra::PolicyAwareAbility do
         :owner => "depositor_t",
         :embargo_release_date => "embargo_release_date_dt",
       
-        :policy_aware => true,
         :inheritable => {
           :catchall => "inheritable_access_t",
           :discover => {:group =>"inheritable_discover_access_group_t", :individual=>"inheritable_discover_access_person_t"},
