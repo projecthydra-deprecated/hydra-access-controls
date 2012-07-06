@@ -1,4 +1,4 @@
-namespace "hydra-security" do
+namespace "hydra-access" do
   desc "Run Continuous Integration"
   task "ci" do
     require 'jettywrapper'
