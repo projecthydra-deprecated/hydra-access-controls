@@ -5,8 +5,6 @@ describe Ability do
     class Rails; end
     Rails.stub(:root).and_return('spec/support')
     Rails.stub(:env).and_return('test')
-    class Devise; end
-    Devise.stub(:authentication_keys).and_return(['uid'])
     Hydra.stub(:config).and_return({
       :permissions=>{
         :catchall => "access_t",

@@ -35,4 +35,9 @@ class Hydra::SuperuserAttributes
  cattr_accessor :silenced
 end
 
-
+# Stubbing Devise
+class Devise
+  def self.authentication_keys
+    ["uid"]
+  end
+end
