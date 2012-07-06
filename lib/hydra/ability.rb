@@ -13,7 +13,7 @@ module Hydra::Ability
   def user_groups(user, session)
     return @user_groups if @user_groups
     @user_groups = RoleMapper.roles(user_key(user)) + default_user_groups
-    @user_groups << 'registered' unless user.new_record?
+    @user_groups << 'registered' unless (user.new_record? || @user_groups.include?('registered'))
     @user_groups
   end
 

@@ -11,6 +11,7 @@ require 'hydra/datastream'
 
 module Hydra
   extend ActiveSupport::Autoload
+  autoload :User
   autoload :AccessControlsEnforcement
   autoload :AccessControlsEvaluation
   autoload :Ability
