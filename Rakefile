@@ -5,6 +5,7 @@ APP_ROOT = File.expand_path("#{File.dirname(__FILE__)}")
 require "jettywrapper"
 # re-using hydra_jetty.rake from hydra-head
 import "lib/tasks/hydra_jetty.rake"
+import "lib/tasks/hydra-access-controls.rake"
 
 desc 'Default: run specs.'
 task :default => :spec
