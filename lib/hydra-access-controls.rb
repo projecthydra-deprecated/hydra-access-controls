@@ -13,6 +13,7 @@ module Hydra
   extend ActiveSupport::Autoload
   autoload :User
   autoload :AccessControlsEnforcement
+  autoload :PolicyAwareAccessControlsEnforcement
   autoload :AccessControlsEvaluation
   autoload :Ability
   autoload :PolicyAwareAbility
