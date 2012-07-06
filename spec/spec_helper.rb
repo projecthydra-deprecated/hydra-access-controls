@@ -30,4 +30,9 @@ RSpec.configure do |config|
 
 end
 
+# Stubbing a deprecated class/method so it won't mess up tests.
+class Hydra::SuperuserAttributes
+ cattr_accessor :silenced
+end
+
 

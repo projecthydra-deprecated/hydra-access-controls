@@ -3,17 +3,7 @@ require 'spec_helper'
 describe Hydra::PolicyAwareAbility do
   before do
     class Rails; end
-    class User; end
     class Devise; end
-    class SolrDocument
-      def initialize(one, two)
-        @one = one
-      end
-      def fetch(field, default)
-        @one[field]
-      end
-    end
-    class Hydra::SuperuserAttributes; end
     Devise.stub(:authentication_keys).and_return(['uid'])
     Rails.stub(:root).and_return('spec/support')
     Rails.stub(:env).and_return('test')

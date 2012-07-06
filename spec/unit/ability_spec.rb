@@ -3,15 +3,10 @@ require 'spec_helper'
 describe Ability do
   before do
     class Rails; end
-    class User; end
     class Devise; end
-    class Hydra::SuperuserAttributes; end
     Devise.stub(:authentication_keys).and_return(['uid'])
-    Hydra::SuperuserAttributes.stub(:silenced)
-    Hydra::SuperuserAttributes.stub(:silenced=)
     Rails.stub(:root).and_return('spec/support')
     Rails.stub(:env).and_return('test')
-
     Hydra.stub(:config).and_return({
       :permissions=>{
         :catchall => "access_t",
