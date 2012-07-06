@@ -3,12 +3,17 @@ require 'spec_helper'
 
 describe Hydra::AccessControlsEnforcement do
   before do
+    class Rails; end
+    Rails.stub(:root).and_return('spec/support')
+    Rails.stub(:env).and_return('test')
+  end
+  before(:all) do
     class MockController
       include Hydra::AccessControlsEnforcement
       attr_accessor :params
       
       def user_key
-        current_user.email
+        current_user.user_key
       end
 
       def session
@@ -16,6 +21,7 @@ describe Hydra::AccessControlsEnforcement do
     end
   end
   subject { MockController.new }
+  
   describe "enforce_access_controls" do
     describe "when the method exists" do
       it "should call the method" do
@@ -32,9 +38,9 @@ describe Hydra::AccessControlsEnforcement do
   end
   describe "enforce_show_permissions" do
     it "should allow a user w/ edit permissions to view an embargoed object" do
-      user = User.new :email=>'testuser@example.com'
+      user = User.new :uid=>'testuser@example.com'
       user.stub(:is_being_superuser?).and_return false
-      RoleMapper.stub(:roles).with(user.email).and_return(["archivist"])
+      RoleMapper.stub(:roles).with(user.user_key).and_return(["archivist"])
       subject.stub(:current_user).and_return(user)
       subject.should_receive(:can?).with(:edit, nil).and_return(true)
       subject.stub(:can?).with(:read, nil).and_return(true)
@@ -45,9 +51,9 @@ describe Hydra::AccessControlsEnforcement do
       lambda {subject.send(:enforce_show_permissions, {}) }.should_not raise_error Hydra::AccessDenied
     end
     it "should prevent a user w/o edit permissions from viewing an embargoed object" do
-      user = User.new :email=>'testuser@example.com'
+      user = User.new :uid=>'testuser@example.com'
       user.stub(:is_being_superuser?).and_return false
-      RoleMapper.stub(:roles).with(user.email).and_return([])
+      RoleMapper.stub(:roles).with(user.user_key).and_return([])
       subject.stub(:current_user).and_return(user)
       subject.should_receive(:can?).with(:edit, nil).and_return(false)
       subject.stub(:can?).with(:read, nil).and_return(true)
@@ -59,9 +65,9 @@ describe Hydra::AccessControlsEnforcement do
   end
   describe "apply_gated_discovery" do
     before(:each) do
-      @stub_user = User.new :email=>'archivist1@example.com'
+      @stub_user = User.new :uid=>'archivist1@example.com'
       @stub_user.stub(:is_being_superuser?).and_return false
-      RoleMapper.stub(:roles).with(@stub_user.email).and_return(["archivist","researcher"])
+      RoleMapper.stub(:roles).with(@stub_user.user_key).and_return(["archivist","researcher"])
       subject.stub(:current_user).and_return(@stub_user)
       @solr_parameters = {}
       @user_parameters = {}
@@ -69,7 +75,7 @@ describe Hydra::AccessControlsEnforcement do
     it "should set query fields for the user id checking against the discover, access, read fields" do
       subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
       ["discover","edit","read"].each do |type|
-        @solr_parameters[:fq].first.should match(/#{type}_access_person_t\:#{@stub_user.email}/)      
+        @solr_parameters[:fq].first.should match(/#{type}_access_person_t\:#{@stub_user.user_key}/)      
       end
     end
     it "should set query fields for all roles the user is a member of checking against the discover, access, read fields" do
@@ -80,11 +86,11 @@ describe Hydra::AccessControlsEnforcement do
       end
     end
     
-    describe "for superusers" do
+    describe "(DEPRECATED) for superusers" do
       it "should return superuser access level" do
-        stub_user = User.new(:email=>'suzie@example.com')
+        stub_user = User.new(:uid=>'suzie@example.com')
         stub_user.stub(:is_being_superuser?).and_return true
-        RoleMapper.stub(:roles).with(stub_user.email).and_return(["archivist","researcher"])
+        RoleMapper.stub(:roles).with(stub_user.user_key).and_return(["archivist","researcher"])
         subject.stub(:current_user).and_return(stub_user)
         subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
         ["discover","edit","read"].each do |type|    
@@ -92,9 +98,9 @@ describe Hydra::AccessControlsEnforcement do
         end
       end
       it "should not return superuser access to non-superusers" do
-        stub_user = User.new(:email=>'suzie@example.com')
+        stub_user = User.new(:uid=>'suzie@example.com')
         stub_user.stub(:is_being_superuser?).and_return false
-        RoleMapper.stub(:roles).with(stub_user.email).and_return(["archivist","researcher"])
+        RoleMapper.stub(:roles).with(stub_user.user_key).and_return(["archivist","researcher"])
         subject.stub(:current_user).and_return(stub_user)
         subject.send(:apply_gated_discovery, @solr_parameters, @user_parameters)
         ["discover","edit","read"].each do |type|
@@ -107,7 +113,7 @@ describe Hydra::AccessControlsEnforcement do
   
   describe "exclude_unwanted_models" do
     before(:each) do
-      stub_user = User.new :email=>'archivist1@example.com'
+      stub_user = User.new :uid=>'archivist1@example.com'
       stub_user.stub(:is_being_superuser?).and_return false
       subject.stub(:current_user).and_return(stub_user)
       @solr_parameters = {}
