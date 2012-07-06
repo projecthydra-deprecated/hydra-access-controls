@@ -103,7 +103,6 @@ module Hydra::PolicyAwareAbility
   # Returns the list of individuals granted read access by the policy object identified by policy_pid
   # Noate: edit implies read, so read_persons is the union of edit and read persons
   def read_persons_from_policy(policy_pid)
-    debugger
     policy_permissions = policy_permissions_doc(policy_pid)
     read_individual_field = Hydra.config[:permissions][:inheritable][:read][:individual]
     rp = edit_persons_from_policy(policy_pid) | ((policy_permissions == nil || policy_permissions.fetch(read_individual_field,nil) == nil) ? [] : policy_permissions.fetch(read_individual_field,nil))
