@@ -5,6 +5,8 @@ module Hydra
     {:permissions=>{:policy_aware => true}}
   end
 end
+
+
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
@@ -25,6 +27,9 @@ require 'support/solr_document'
 require "support/user"
 require "factory_girl"
 require "factories"
+
+require 'support/blacklight'
+require 'support/rails'
 
 RSpec.configure do |config|
 
