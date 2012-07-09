@@ -5,7 +5,7 @@ gemspec
 
 group :development do
   gem 'jettywrapper'
-  gem 'debugger'
+  gem 'debugger', :platform => :mri_19
 end
 
 group :test do
