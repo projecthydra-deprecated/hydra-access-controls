@@ -75,10 +75,10 @@ FactoryGirl.define do
   # Repository Objects
   #
   
-  factory :asset, class: ModsAsset do |o|
+  factory :asset, :class => ModsAsset do |o|
   end
   
-  factory :admin_policy, class: Hydra::AdminPolicy do |o|
+  factory :admin_policy, :class => Hydra::AdminPolicy do |o|
   end
   
   factory :default_access_asset, :parent=>:asset do |a|
