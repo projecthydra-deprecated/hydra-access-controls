@@ -2,8 +2,8 @@
 require File.expand_path('../lib/hydra-access-controls/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["Justin Coyne"]
-  gem.email         = ["justin.coyne@yourmediashelf.com"]
+  gem.authors       = ["Chris Beer", "Justin Coyne", "Matt Zumwalt"]
+  gem.email         = ["hydra-tech@googlegroups.com"]
   gem.description   = %q{Access controls for project hydra}
   gem.summary       = %q{Access controls for project hydra}
   gem.homepage      = ""
