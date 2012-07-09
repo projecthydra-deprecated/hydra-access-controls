@@ -13,5 +13,5 @@ group :test do
   gem 'rcov', :platform => :mri_18
   gem 'simplecov', :platform => :mri_19
   gem 'simplecov-rcov', :platform => :mri_19
-  gem 'factory_girl'
+  gem 'factory_girl', '< 3.0.0' # factory girl 3+ doesn't work with ruby 1.8
 end
