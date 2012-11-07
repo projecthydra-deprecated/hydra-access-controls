@@ -1,5 +1,8 @@
+require 'deprecation'
 # will move to lib/hydra/access_control folder/namespace in release 5.x
 module Hydra::AccessControlsEnforcement
+  
+  extend Deprecation
   
   def self.included(klass)
     klass.send(:include, Hydra::AccessControlsEvaluation)
@@ -137,8 +140,14 @@ module Hydra::AccessControlsEnforcement
     enforce_edit_permissions(opts)
   end
 
-  ## proxies to enforce_edit_permssions.  This method is here for you to override
+  ## proxies to enforce_destroy_permssions until this method is end-of-lifed. The proper action is destroy not delete.
   def enforce_delete_permissions(opts={})
+    enforce_destroy_permissions(opts)
+  end
+  deprecation_deprecate :enforce_delete_permissions
+  
+  ## proxies to enforce_edit_permssions.  This method is here for you to override
+  def enforce_destroy_permissions(opts={})
     enforce_edit_permissions(opts)
   end
 

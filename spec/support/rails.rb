@@ -1,4 +1,4 @@
-class Rails
+module Rails
   def self.env
     ENV['environment']
   end

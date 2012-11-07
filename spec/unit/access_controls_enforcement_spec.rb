@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe Hydra::AccessControlsEnforcement do
   before do
-    class Rails; end
+    module Rails; end
     Rails.stub(:root).and_return('spec/support')
     Rails.stub(:env).and_return('test')
   end
@@ -112,6 +112,13 @@ describe Hydra::AccessControlsEnforcement do
       subject.instance_variable_set :@permissions_solr_document, SolrDocument.new({"edit_access_person_t"=>["testuser@example.com"], "embargo_release_date_dt"=>(Date.parse(Time.now.to_s)+2).to_s})
       subject.should_receive(:load_permissions_from_solr) #This is what normally sets @permissions_solr_document
       lambda {subject.send(:enforce_show_permissions, {})}.should raise_error Hydra::AccessDenied, "This item is under embargo.  You do not have sufficient access privileges to read this document."
+    end
+  end
+  describe "enforce_destroy_permissions" do
+    it "should proxy destory permissions to edit permission check" do
+      subject.params = {:action => :destroy}
+      subject.should_receive(:enforce_edit_permissions).once
+      subject.send(:enforce_destroy_permissions)
     end
   end
   describe "apply_gated_discovery" do
