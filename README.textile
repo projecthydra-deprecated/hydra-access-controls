@@ -94,7 +94,8 @@ h2. Contributing
 
 h2. Testing
 
-    $ git submodule init
-    $ rake jetty:config
-    $ rake jetty:start
-    $ rake spec
+$ git submodule init
+$ get submodule update
+$ rake jetty:config
+$ rake jetty:start
+$ rake spec
