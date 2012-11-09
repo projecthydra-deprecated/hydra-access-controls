@@ -30,29 +30,29 @@ Object-level permissions and Policy-level permissions are combined to produce th
 
 To turn on Policy-based enforcement, 
 
-* include the Hydra::PolicyAwareAbility module in your Ability class (Make sure to include it _after_ Hydra::Ability because it overrides some of the methods provided by that module.)
-* include the Hydra::PolicyAwareAccessControlsEnforcement module into any appropriate Controllers (or into ApplicationController)
+* include the `Hydra::PolicyAwareAbility` module in your `Ability` class (Make sure to include it _after_ `Hydra::Ability` because it overrides some of the methods provided by that module.)
+* include the `Hydra::PolicyAwareAccessControlsEnforcement` module into any appropriate Controllers (or into `ApplicationController`)
  
 app/models/ability.rb
 
-  # Allows you to use CanCan to control access to Models
-  require 'cancan'
-  class Ability
-    include CanCan::Ability
-    include Hydra::Ability
-    include Hydra::PolicyAwareAbility
-  end
+    # Allows you to use CanCan to control access to Models
+    require 'cancan'
+    class Ability
+      include CanCan::Ability
+      include Hydra::Ability
+      include Hydra::PolicyAwareAbility
+    end
 
 app/controllers/catalog_controller.rb
 
-  class CatalogController < ApplicationController  
+    class CatalogController < ApplicationController  
 
-    include Blacklight::Catalog
-    include Hydra::Controller::ControllerBehavior
-    include Hydra::PolicyAwareAccessControlsEnforcement
+      include Blacklight::Catalog
+      include Hydra::Controller::ControllerBehavior
+      include Hydra::PolicyAwareAccessControlsEnforcement
     
-    # ...
-  end
+      # ...
+    end
 
 ### Modifying solr field names for enforcement
 
@@ -60,25 +60,25 @@ Hydra uses its own set of default solr field names to track rights-related metad
 
 # config/initializers/hydra_config.rb
 
-  Hydra.configure(:shared) do |config|
-    # ... other stuff ...
-    config[:permissions] = {
-      :catchall => "access_t",
-      :discover => {:group =>"discover_access_group_t", :individual=>"discover_access_person_t"},
-      :read => {:group =>"read_access_group_t", :individual=>"read_access_person_t"},
-      :edit => {:group =>"edit_access_group_t", :individual=>"edit_access_person_t"},
-      :owner => "depositor_t",
-      :embargo_release_date => "embargo_release_date_dt"
-    }
-    config[:permissions][:inheritable] = {
-      :catchall => "inheritable_access_t",
-      :discover => {:group =>"inheritable_discover_access_group_t", :individual=>"inheritable_discover_access_person_t"},
-      :read => {:group =>"inheritable_read_access_group_t", :individual=>"inheritable_read_access_person_t"},
-      :edit => {:group =>"inheritable_edit_access_group_t", :individual=>"inheritable_edit_access_person_t"},
-      :owner => "inheritable_depositor_t",
-      :embargo_release_date => "inheritable_embargo_release_date_dt"
-    }
-  end
+    Hydra.configure(:shared) do |config|
+      # ... other stuff ...
+      config[:permissions] = {
+        :catchall => "access_t",
+        :discover => {:group =>"discover_access_group_t", :individual=>"discover_access_person_t"},
+        :read => {:group =>"read_access_group_t", :individual=>"read_access_person_t"},
+        :edit => {:group =>"edit_access_group_t", :individual=>"edit_access_person_t"},
+        :owner => "depositor_t",
+        :embargo_release_date => "embargo_release_date_dt"
+      }
+      config[:permissions][:inheritable] = {
+        :catchall => "inheritable_access_t",
+        :discover => {:group =>"inheritable_discover_access_group_t", :individual=>"inheritable_discover_access_person_t"},
+        :read => {:group =>"inheritable_read_access_group_t", :individual=>"inheritable_read_access_person_t"},
+        :edit => {:group =>"inheritable_edit_access_group_t", :individual=>"inheritable_edit_access_person_t"},
+        :owner => "inheritable_depositor_t",
+        :embargo_release_date => "inheritable_embargo_release_date_dt"
+      }
+    end
 
 ## Contributing
 
@@ -90,8 +90,8 @@ Hydra uses its own set of default solr field names to track rights-related metad
 
 ## Testing
 
-   $ git submodule init
-   $ git submodule update
-   $ rake jetty:config
-   $ rake jetty:start
-   $ rake spec
+    $ git submodule init
+    $ git submodule update
+    $ rake jetty:config
+    $ rake jetty:start
+    $ rake spec
