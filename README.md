@@ -1,6 +1,6 @@
 # hydra-access-controls
 
-The hydra-access-controls gem provides access controls models and functionality for Hydra Heads.  See the "hydra-head":http://github.com/projecthydra/hydra-head gem and the "Hydra Project website":http://projecthydra.org for more info.
+The hydra-access-controls gem provides access controls models and functionality for Hydra Heads.  See the [hydra-head](http://github.com/projecthydra/hydra-head) gem and the [Hydra Project](http://projecthydra.org) website for more info.
 
 ## Installation
 
@@ -20,7 +20,7 @@ Or install it yourself as:
 
 ### Policy-based Enforcement (or Collecton-level enforcement)
 
-If you have Policy-based enforcement enabled, then objects will inherit extra GRANT permissions from AdminPolicy objects they are linked to with an isGovernedBy RDF relationship (stored in solr as _is_governed_by_s__ field).  This allows you to grant discover/read/edit access for a whole set of objects by changing the policy they are governed by.
+If you have Policy-based enforcement enabled, then objects will inherit extra GRANT permissions from AdminPolicy objects they are linked to with an isGovernedBy RDF relationship (stored in solr as _is_governed_by_s_ field).  This allows you to grant discover/read/edit access for a whole set of objects by changing the policy they are governed by.
 
 AdminPolicy objects store their inheritable rightsMetadata in a datastream called defaultRights.  This datastream uses the regular Hydra rightsMetadata schema.  Each AdminPolicy object also has its own rightsMetadata datasream, like all other Hydra assets, which specifies who is able to _edit_ the Policy or _use_ it (associate it with objects).
 
@@ -35,24 +35,28 @@ To turn on Policy-based enforcement,
  
 app/models/ability.rb
 
-    # Allows you to use CanCan to control access to Models
-    require 'cancan'
-    class Ability
-      include CanCan::Ability
-      include Hydra::Ability
-      include Hydra::PolicyAwareAbility
-    end
+```ruby
+# Allows you to use CanCan to control access to Models
+require 'cancan'
+class Ability
+  include CanCan::Ability
+  include Hydra::Ability
+  include Hydra::PolicyAwareAbility
+end
+```
 
 app/controllers/catalog_controller.rb
 
-    class CatalogController < ApplicationController  
+```ruby
+class CatalogController < ApplicationController  
 
-      include Blacklight::Catalog
-      include Hydra::Controller::ControllerBehavior
-      include Hydra::PolicyAwareAccessControlsEnforcement
-    
-      # ...
-    end
+  include Blacklight::Catalog
+  include Hydra::Controller::ControllerBehavior
+  include Hydra::PolicyAwareAccessControlsEnforcement
+
+  # ...
+end
+```
 
 ### Modifying solr field names for enforcement
 
@@ -60,25 +64,27 @@ Hydra uses its own set of default solr field names to track rights-related metad
 
 # config/initializers/hydra_config.rb
 
-    Hydra.configure(:shared) do |config|
-      # ... other stuff ...
-      config[:permissions] = {
-        :catchall => "access_t",
-        :discover => {:group =>"discover_access_group_t", :individual=>"discover_access_person_t"},
-        :read => {:group =>"read_access_group_t", :individual=>"read_access_person_t"},
-        :edit => {:group =>"edit_access_group_t", :individual=>"edit_access_person_t"},
-        :owner => "depositor_t",
-        :embargo_release_date => "embargo_release_date_dt"
-      }
-      config[:permissions][:inheritable] = {
-        :catchall => "inheritable_access_t",
-        :discover => {:group =>"inheritable_discover_access_group_t", :individual=>"inheritable_discover_access_person_t"},
-        :read => {:group =>"inheritable_read_access_group_t", :individual=>"inheritable_read_access_person_t"},
-        :edit => {:group =>"inheritable_edit_access_group_t", :individual=>"inheritable_edit_access_person_t"},
-        :owner => "inheritable_depositor_t",
-        :embargo_release_date => "inheritable_embargo_release_date_dt"
-      }
-    end
+```ruby
+Hydra.configure(:shared) do |config|
+  # ... other stuff ...
+  config[:permissions] = {
+    :catchall => "access_t",
+    :discover => {:group =>"discover_access_group_t", :individual=>"discover_access_person_t"},
+    :read => {:group =>"read_access_group_t", :individual=>"read_access_person_t"},
+    :edit => {:group =>"edit_access_group_t", :individual=>"edit_access_person_t"},
+    :owner => "depositor_t",
+    :embargo_release_date => "embargo_release_date_dt"
+  }
+  config[:permissions][:inheritable] = {
+    :catchall => "inheritable_access_t",
+    :discover => {:group =>"inheritable_discover_access_group_t", :individual=>"inheritable_discover_access_person_t"},
+    :read => {:group =>"inheritable_read_access_group_t", :individual=>"inheritable_read_access_person_t"},
+    :edit => {:group =>"inheritable_edit_access_group_t", :individual=>"inheritable_edit_access_person_t"},
+    :owner => "inheritable_depositor_t",
+    :embargo_release_date => "inheritable_embargo_release_date_dt"
+  }
+end
+```
 
 ## Contributing
 
