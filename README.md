@@ -1,8 +1,8 @@
-h1. hydra-access-controls
+# hydra-access-controls
 
 The hydra-access-controls gem provides access controls models and functionality for Hydra Heads.  See the "hydra-head":http://github.com/projecthydra/hydra-head gem and the "Hydra Project website":http://projecthydra.org for more info.
 
-h2. Installation
+## Installation
 
 Add this line to your application's Gemfile:
 
@@ -16,9 +16,9 @@ Or install it yourself as:
 
     $ gem install hydra-access-controls
 
-h2. Usage
+## Usage
 
-h3. Policy-based Enforcement (or Collecton-level enforcement)
+### Policy-based Enforcement (or Collecton-level enforcement)
 
 If you have Policy-based enforcement enabled, then objects will inherit extra GRANT permissions from AdminPolicy objects they are linked to with an isGovernedBy RDF relationship (stored in solr as _is_governed_by_s__ field).  This allows you to grant discover/read/edit access for a whole set of objects by changing the policy they are governed by.
 
@@ -27,15 +27,14 @@ AdminPolicy objects store their inheritable rightsMetadata in a datastream calle
 Object-level permissions and Policy-level permissions are combined to produce the list of Individuals & Groups who have access to the object.  This means that if _either_ the object's rightsMetadata or the Policy's defaultRights grants access to an Individual or Group, that access will be allowed.
 
 * Currently, an asset can have only one Policy associated with it -- you can't associate objects with multiple policies
-* 
 
 To turn on Policy-based enforcement, 
 
 * include the Hydra::PolicyAwareAbility module in your Ability class (Make sure to include it _after_ Hydra::Ability because it overrides some of the methods provided by that module.)
 * include the Hydra::PolicyAwareAccessControlsEnforcement module into any appropriate Controllers (or into ApplicationController)
  
-# app/models/ability.rb
-<pre>
+app/models/ability.rb
+
   # Allows you to use CanCan to control access to Models
   require 'cancan'
   class Ability
@@ -43,10 +42,9 @@ To turn on Policy-based enforcement,
     include Hydra::Ability
     include Hydra::PolicyAwareAbility
   end
-</pre>
 
-# app/controllers/catalog_controller.rb
-<pre>
+app/controllers/catalog_controller.rb
+
   class CatalogController < ApplicationController  
 
     include Blacklight::Catalog
@@ -55,14 +53,13 @@ To turn on Policy-based enforcement,
     
     # ...
   end
-</pre>
 
-h3. Modifying solr field names for enforcement
+### Modifying solr field names for enforcement
 
 Hydra uses its own set of default solr field names to track rights-related metadata in solr.  If you want to use your own field names, you can change them in your Hydra config.  You will also have to modify the permissions response handler in your solrconfig.xml to return those fields.
 
 # config/initializers/hydra_config.rb
-<pre>
+
   Hydra.configure(:shared) do |config|
     # ... other stuff ...
     config[:permissions] = {
@@ -82,9 +79,8 @@ Hydra uses its own set of default solr field names to track rights-related metad
       :embargo_release_date => "inheritable_embargo_release_date_dt"
     }
   end
-</pre>
 
-h2. Contributing
+## Contributing
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
@@ -92,10 +88,10 @@ h2. Contributing
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
-h2. Testing
+## Testing
 
-$ git submodule init
-$ get submodule update
-$ rake jetty:config
-$ rake jetty:start
-$ rake spec
+   $ git submodule init
+   $ git submodule update
+   $ rake jetty:config
+   $ rake jetty:start
+   $ rake spec
