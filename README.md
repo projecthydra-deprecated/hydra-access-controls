@@ -1,4 +1,14 @@
+# NOTICE!
+
+This is not the hydra-access-controls gem you are looking for.  This repository has moved and is no longer being actively developed
+here.  If you are currently working on a Hydra application and want to use hydra-access-controls,
+please reference this repository:
+
+[https://github.com/projecthydra/hydra-head/tree/master/hydra-access-controls](https://github.com/projecthydra/hydra-head/tree/master/hydra-access-controls)
+
 # hydra-access-controls
+
+**Please note: This information is no longer current! It only applies to versions of Hydra prior to 4.1.3**
 
 The hydra-access-controls gem provides access controls models and functionality for Hydra Heads.  See the [hydra-head](http://github.com/projecthydra/hydra-head) gem and the [Hydra Project](http://projecthydra.org) website for more info.
 
